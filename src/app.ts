@@ -1,6 +1,4 @@
 import express from "express";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { accessAuth } from "./middleware/accessAuth.js";
 import { blockOnVercel, IS_VERCEL } from "./middleware/vercelGuard.js";
 import accountsRouter from "./routes/accounts.js";
@@ -10,8 +8,10 @@ import quickLicenseRouter from "./routes/quickLicense.js";
 import downloadRouter from "./routes/download.js";
 import libraryRouter from "./routes/library.js";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
+// No filesystem/import.meta usage here: this module is bundled as-is by
+// Vercel's function builder (api/index.ts), which has its own module format
+// assumptions — keep it to pure request handling. Static file serving is a
+// self-host-only concern, wired up separately in server.ts.
 export const app = express();
 app.use(express.json({ limit: "1mb" }));
 
@@ -36,8 +36,6 @@ app.use("/api", licenseRouter);
 app.use("/api", quickLicenseRouter);
 app.use("/api", downloadRouter);
 app.use("/api", libraryRouter);
-
-app.use(express.static(path.join(__dirname, "..", "public")));
 
 app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error(err);
