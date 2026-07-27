@@ -4,3 +4,6 @@ data/
 .env
 *.log
 .claude/
+
+.vercel
+.env*

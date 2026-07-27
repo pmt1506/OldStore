@@ -7,7 +7,7 @@ RUN npm ci
 
 COPY tsconfig.json ./
 COPY src ./src
-RUN npm run build
+RUN npm run docker:build
 
 # --- runtime stage: production deps only + compiled output ---
 FROM node:20-alpine
