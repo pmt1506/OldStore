@@ -1,0 +1,13 @@
+services:
+  oldstore:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/app/data
+    environment:
+      PORT: 8080
+      DATA_DIR: /app/data
+      ACCESS_PASSWORD: ${ACCESS_PASSWORD:-}
+      MAX_DOWNLOAD_MB: ${MAX_DOWNLOAD_MB:-0}
+    restart: unless-stopped

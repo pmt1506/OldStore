@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OldStore</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header>
+    <h1>OldStore</h1>
+    <p class="subtitle">Tra cứu bundle ID App Store, lấy license và lưu trữ file IPA cho thiết bị iOS đời thấp.</p>
+  </header>
+
+  <div id="vercel-banner" class="card hidden">
+    <strong>Chế độ Vercel (giới hạn):</strong> chỉ tra cứu bundle ID và xác nhận license, mỗi lần thao tác là
+    một request độc lập (không lưu phiên đăng nhập). Không tải/lưu trữ IPA được ở đây vì Vercel không có ổ đĩa
+    bền vững và giới hạn response ~4.5MB. Muốn tải &amp; lưu trữ IPA đầy đủ, hãy tự host bằng Docker — xem README.
+  </div>
+
+  <main>
+    <section id="access-gate" class="card hidden">
+      <h2>Mật khẩu truy cập</h2>
+      <input id="access-password" type="password" placeholder="X-Access-Password" />
+      <button id="access-save">Lưu</button>
+    </section>
+
+    <section id="section-accounts" class="card">
+      <h2>1. Tài khoản Apple ID</h2>
+      <div id="account-list" class="list"></div>
+      <form id="login-form">
+        <input id="login-email" type="text" placeholder="Apple ID (email)" required autocomplete="username" />
+        <input id="login-password" type="password" placeholder="Mật khẩu" required autocomplete="current-password" />
+        <input id="login-code" type="text" placeholder="Mã 2FA (nếu được yêu cầu)" class="hidden" />
+        <button type="submit">Đăng nhập</button>
+        <span class="hint">Mật khẩu và mã 2FA chỉ dùng để xác thực với Apple, không lưu lại trên server.</span>
+      </form>
+      <p id="login-status" class="status"></p>
+    </section>
+
+    <section class="card">
+      <h2>2. Tra cứu app (link App Store / bundle ID / trackId)</h2>
+      <form id="lookup-form">
+        <input id="lookup-input" type="text" placeholder="https://apps.apple.com/vn/app/.../id123456789" required />
+        <input id="lookup-country" type="text" placeholder="Mã quốc gia (vd: us, vn)" maxlength="2" />
+        <button type="submit">Tra cứu</button>
+      </form>
+      <div id="lookup-result" class="card inner hidden"></div>
+    </section>
+
+    <section id="section-library" class="card">
+      <h2>3. Thư viện IPA đã tải</h2>
+      <button id="library-refresh">Làm mới</button>
+      <div id="library-list" class="list"></div>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
