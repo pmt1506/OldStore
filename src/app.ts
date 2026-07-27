@@ -52,7 +52,18 @@ app.get("/", (_req, res) => {
 });
 
 app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-  console.error(err);
+  // Log the message only, never the error object: express.json() attaches
+  // the raw request body to parse failures, which would put a visitor's
+  // Apple ID password into the host's logs.
+  console.error(err instanceof Error ? err.message : String(err));
+
+  // body-parser tags malformed input with a 4xx status — that's the
+  // client's fault, not ours.
+  const status = (err as { status?: number })?.status;
+  if (typeof status === "number" && status >= 400 && status < 500) {
+    res.status(status).json({ error: "Yeu cau khong hop le" });
+    return;
+  }
   res.status(500).json({ error: "Loi noi bo" });
 });
 

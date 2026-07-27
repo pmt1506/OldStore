@@ -13,9 +13,17 @@
   </header>
 
   <div id="vercel-banner" class="card hidden">
-    <strong>Chế độ Vercel (giới hạn):</strong> chỉ tra cứu bundle ID và xác nhận license, mỗi lần thao tác là
-    một request độc lập (không lưu phiên đăng nhập). Không tải/lưu trữ IPA được ở đây vì Vercel không có ổ đĩa
-    bền vững và giới hạn response ~4.5MB. Muốn tải &amp; lưu trữ IPA đầy đủ, hãy tự host bằng Docker — xem README.
+    <p>
+      <strong>Chế độ Vercel (giới hạn):</strong> đăng nhập Apple ID và lấy license vẫn dùng được bình thường,
+      nhưng mỗi lần là một request độc lập (không lưu phiên, nhập lại mật khẩu cho app kế tiếp). Không tải/lưu
+      trữ IPA được ở đây vì Vercel không có ổ đĩa bền vững và giới hạn response ~4.5MB. Muốn tải &amp; lưu trữ
+      IPA đầy đủ, hãy tự host bằng Docker — xem README.
+    </p>
+    <p>
+      <strong>⚠️ Về mật khẩu:</strong> mật khẩu Apple ID bạn nhập sẽ đi qua server của instance này để gửi tới
+      Apple (bản này không dùng kiến trúc zero-trust). Không có gì được lưu lại, nhưng bạn đang tin tưởng người
+      vận hành instance — chỉ nhập nếu bạn tin instance này, hoặc tự host bản của riêng mình.
+    </p>
   </div>
 
   <main>
