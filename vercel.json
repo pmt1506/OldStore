@@ -2,7 +2,8 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "functions": {
     "src/app.ts": {
-      "maxDuration": 30
+      "maxDuration": 30,
+      "includeFiles": "public/**"
     }
   }
 }

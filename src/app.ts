@@ -1,4 +1,5 @@
 import express from "express";
+import path from "node:path";
 import { accessAuth } from "./middleware/accessAuth.js";
 import { blockOnVercel, IS_VERCEL } from "./middleware/vercelGuard.js";
 import accountsRouter from "./routes/accounts.js";
@@ -8,12 +9,10 @@ import quickLicenseRouter from "./routes/quickLicense.js";
 import downloadRouter from "./routes/download.js";
 import libraryRouter from "./routes/library.js";
 
-// No filesystem/import.meta usage here: Vercel auto-detects this file as
-// the app entrypoint (its Node backend framework support looks for
-// app/index/server/main under src/, in that order — "src/app" matches
-// before "src/server" does) and bundles it directly, with its own module
-// format assumptions. Keep it to pure request handling; static file
-// serving for self-host is wired up separately in server.ts.
+// Vercel auto-detects this file as the app entrypoint (its Node backend
+// support looks for app/index/server/main under src/, in that order) and
+// bundles it directly. Deliberately no import.meta.url here — the bundler
+// rewrites the module format and that broke the export contract before.
 export const app = express();
 app.use(express.json({ limit: "1mb" }));
 
@@ -38,6 +37,19 @@ app.use("/api", licenseRouter);
 app.use("/api", quickLicenseRouter);
 app.use("/api", downloadRouter);
 app.use("/api", libraryRouter);
+
+// Serve the frontend from the app itself rather than relying on the host's
+// static routing, so "/" behaves identically on Vercel, Docker and local.
+// process.cwd() is the project root in all three (Vercel needs the
+// includeFiles entry in vercel.json to ship public/ into the bundle).
+app.use(express.static(path.join(process.cwd(), "public")));
+
+// Vercel moves public/*.html into its own static hosting, so the middleware
+// above can't find index.html there and "/" would fall through to a 404.
+// Self-host never reaches this line — express.static already answered.
+app.get("/", (_req, res) => {
+  res.redirect("/index.html");
+});
 
 app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error(err);
